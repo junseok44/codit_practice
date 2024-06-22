@@ -1,0 +1,33 @@
+# docker-compose.yml
+
+version: "3.8"
+
+services:
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    # ports:
+    #   - "8000:8000"
+    volumes:
+      - ./server/src:/app/src
+      - ./server/package.json:/app/package.json
+    environment:
+      - NODE_ENV=development
+    env_file:
+      - ./.env
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    volumes:
+      - ./client/src:/app/src
+      - ./client/public:/app/public
+      - ./client/package.json:/app/package.json
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+    env_file:
+      - ./.env
