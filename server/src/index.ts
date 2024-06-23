@@ -5,7 +5,7 @@ const PORT = process.env.SERVER_PORT || 8000;
 
 app.get("/api", (req, res) => {
   res.send({
-    message: "Hello, world from serverr!!!",
+    message: "Hello, world from server!!",
   });
 });
 
