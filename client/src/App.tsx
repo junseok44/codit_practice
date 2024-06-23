@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import useS3FileUpload from "./hooks/useS3Upload.ts";
 
 const App = () => {
@@ -15,9 +15,35 @@ const App = () => {
         "Content-Type": "application/json",
       },
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          return response.json().then((errorData) => {
+            throw new Error(errorData.message || "Failed to upload file");
+          });
+        }
+        return response.json();
+      })
       .then((data) => {
         console.log(data);
+        getFileList();
+      })
+      .catch((error) => {
+        console.error("Error uploading file:", error);
+      });
+  };
+
+  const getFileList = () => {
+    fetch("/api/files")
+      .then((response) => {
+        if (!response.ok) {
+          return response.json().then((errorData) => {
+            throw new Error(errorData.message || "Failed to fetch files");
+          });
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setFiles(data.data);
       });
   };
 
@@ -30,8 +56,19 @@ const App = () => {
     handleUpload,
   } = useS3FileUpload(onUploadSuccess);
 
+  const [files, setFiles] = useState([]);
+
+  useEffect(() => {
+    getFileList();
+  }, []);
+
   return (
     <div>
+      <ul>
+        {files.map((file) => (
+          <li key={file.id}>{file.name}</li>
+        ))}
+      </ul>
       <input type="file" accept="application/pdf" onChange={handleFileChange} />
       <button onClick={handleUpload} disabled={uploading || !selectedFile}>
         {uploading ? "Uploading..." : "Upload PDF"}

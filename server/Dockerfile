@@ -2,13 +2,14 @@ FROM node:16
 
 WORKDIR /app
 
-COPY package.json package-lock.json ./
+COPY package*.json ./
+
 RUN npm install
 
-COPY tsconfig.json ./
-COPY src ./src
+COPY . .
 
-EXPOSE 5000
+RUN npx prisma generate
+
+EXPOSE 8000
 
 CMD ["npm", "run", "dev"]
-
