@@ -8,6 +8,11 @@
     "strict": true,
     "jsx": "react-jsx"
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/lib/extract-table.ts",
+    "src/lib/pdf-extractor.js"
+  ],
   "exclude": ["node_modules"]
 }

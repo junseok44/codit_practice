@@ -2,18 +2,14 @@ import express from "express";
 import bodyParser from "body-parser";
 import db, { connectToDatabase } from "./config/db";
 
+const table_extractor = require("./lib/custom-extractor.js");
+
 const app = express();
 const PORT = process.env.SERVER_PORT || 8000;
 
 app.use(bodyParser.json());
 
 connectToDatabase();
-
-app.get("/api", (req, res) => {
-  res.send({
-    message: "Hello, world from server!!",
-  });
-});
 
 app.get("/api/files", async (req, res) => {
   try {
@@ -74,11 +70,19 @@ app.post("/api/file", async (req, res) => {
   }
 
   try {
+    let parsedData = [];
+
+    const { pageTables } = await table_extractor(url);
+
+    for (const page of pageTables) {
+      parsedData.push(page.tables);
+    }
+
     const data = await db.pdfDocument.create({
       data: {
         name: key,
         url,
-        parsedData: [],
+        parsedData: parsedData,
       },
     });
 
