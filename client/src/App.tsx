@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import useS3FileUpload from "./hooks/useS3Upload.ts";
+import { IFile } from "./@types/file";
 
 const App = () => {
   const onUploadSuccess = (data: { Location: string; Key: string }) => {
-    console.log("File uploaded to:", data.Location);
-
-    fetch("/api/file", {
+    fetch(`/api/file`, {
       method: "POST",
       body: JSON.stringify({
         url: data.Location,
@@ -33,7 +32,7 @@ const App = () => {
   };
 
   const getFileList = () => {
-    fetch("/api/files")
+    fetch(`/api/files`)
       .then((response) => {
         if (!response.ok) {
           return response.json().then((errorData) => {
@@ -44,6 +43,9 @@ const App = () => {
       })
       .then((data) => {
         setFiles(data.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching files:", error);
       });
   };
 
@@ -56,7 +58,7 @@ const App = () => {
     handleUpload,
   } = useS3FileUpload(onUploadSuccess);
 
-  const [files, setFiles] = useState([]);
+  const [files, setFiles] = useState<IFile[]>([]);
 
   useEffect(() => {
     getFileList();
@@ -66,7 +68,9 @@ const App = () => {
     <div>
       <ul>
         {files.map((file) => (
-          <li key={file.id}>{file.name}</li>
+          <a key={file.id} href={`/file/${file.id}`}>
+            <li>{file.name}</li>
+          </a>
         ))}
       </ul>
       <input type="file" accept="application/pdf" onChange={handleFileChange} />

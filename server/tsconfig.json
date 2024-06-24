@@ -5,6 +5,9 @@
     "rootDir": "src",
     "outDir": "dist",
     "esModuleInterop": true,
-    "strict": true
-  }
+    "strict": true,
+    "jsx": "react-jsx"
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "exclude": ["node_modules"]
 }

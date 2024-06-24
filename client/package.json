@@ -4,8 +4,11 @@
   "private": true,
   "dependencies": {
     "aws-sdk": "^2.1646.0",
+    "pdfjs-dist": "^4.3.136",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-pdf": "^9.0.0",
+    "react-router-dom": "^6.23.1",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },

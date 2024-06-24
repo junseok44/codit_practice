@@ -17,7 +17,15 @@ app.get("/api", (req, res) => {
 
 app.get("/api/files", async (req, res) => {
   try {
-    const data = await db.pdfDocument.findMany();
+    const data = await db.pdfDocument.findMany({
+      select: {
+        id: true,
+        name: true,
+        url: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
 
     res.json({
       message: "Files fetched successfully!",
@@ -29,6 +37,30 @@ app.get("/api/files", async (req, res) => {
     res.status(500).send({
       message: "Error fetching files",
     });
+  }
+});
+
+app.get("/api/file/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const file = await db.pdfDocument.findUnique({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!file) {
+      return res.status(404).json({ error: "File not found" });
+    }
+
+    res.send({
+      message: "File fetched successfully!",
+      data: file,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
@@ -59,6 +91,20 @@ app.post("/api/file", async (req, res) => {
 
     res.status(500).send({
       message: "Error uploading file",
+    });
+  }
+});
+
+app.get("/api/removeall", async (req, res) => {
+  try {
+    await db.pdfDocument.deleteMany({});
+
+    res.send({
+      message: "File deleted successfully!",
+    });
+  } catch {
+    res.status(500).send({
+      message: "Error deleting file",
     });
   }
 });
