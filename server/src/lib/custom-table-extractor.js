@@ -788,22 +788,25 @@ pdf_table_extractor = function (doc) {
   });
 };
 
-pdf_table_extractor_run = async function (url, success, error) {
-  const { default: fetch } = await import("node-fetch");
+pdf_table_extractor_run = async function (url) {
+  try {
+    const { default: fetch } = await import("node-fetch");
 
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const arrayBuffer = await response.arrayBuffer();
+    const data = new Uint8Array(arrayBuffer);
+
+    const pdf = await PDFJS.getDocument(data).promise;
+    const result = await pdf_table_extractor(pdf);
+    return result;
+  } catch (e) {
+    console.error(e);
+    return null;
   }
-
-  const arrayBuffer = await response.arrayBuffer();
-  const data = new Uint8Array(arrayBuffer);
-
-  // PDFJS.getDocument(data).then(pdf_table_extractor).then(success, error);
-
-  const pdf = await PDFJS.getDocument(data).promise;
-  const result = await pdf_table_extractor(pdf);
-  return result;
 
   // Will be using promises to load document, pages and misc data instead of
   // callback.

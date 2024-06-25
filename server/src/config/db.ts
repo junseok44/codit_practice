@@ -2,11 +2,7 @@ import { PrismaClient } from "@prisma/client";
 
 const globalForPrisma = global as unknown as { prisma: PrismaClient };
 
-const prisma =
-  globalForPrisma.prisma ||
-  new PrismaClient({
-    log: ["query", "info", "warn", "error"],
-  });
+const prisma = globalForPrisma.prisma || new PrismaClient({});
 
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 
@@ -18,5 +14,7 @@ export async function connectToDatabase() {
     console.error("Failed to connect to the database:", error);
   }
 }
+
+connectToDatabase();
 
 export default prisma;
