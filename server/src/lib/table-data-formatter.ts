@@ -9,7 +9,7 @@ export type ResultTableData = [ResultColumn, ResultColumn];
 const customSplitRegex = /(?=^제\d+조)|(?=\n[\u2460-\u2473])|(?=\n<신 설>)/gm;
 
 export default function PdfTableFormatter(result: any) {
-  let originalData = [];
+  let originalData: LegislationData = [];
   const pageTables = result.pageTables;
 
   for (const page of pageTables) {
@@ -70,6 +70,9 @@ function formatter(data: LegislationData): ResultTableData {
         }
       }
 
+      // console.log("proposed" + proposed);
+      // console.log("proposed buffer" + proposedBuffer);
+
       if (proposed) {
         const proposedMatches = proposed.match(customSplitRegex);
 
@@ -99,6 +102,8 @@ function formatter(data: LegislationData): ResultTableData {
           proposedBuffer += proposed + " ";
         }
       }
+
+      // console.log("*********************************************");
     }
   }
 
