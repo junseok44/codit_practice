@@ -19,6 +19,8 @@ const FilePage = () => {
         return response.json();
       })
       .then((data) => {
+        console.log("Fetched file:", data.data);
+
         setFile(data.data);
       })
       .catch((error) => {
@@ -26,17 +28,43 @@ const FilePage = () => {
       });
   }, [fileId]);
 
+  if (!file) {
+    return <h1>Loading...</h1>;
+  }
+
+  const coupledData = file.parsedData[0].map((column, index) => {
+    return [column, file.parsedData[1][index]];
+  });
+
   return (
-    <div>
-      {file ? (
-        <div>
-          <h1>{file.name}</h1>
+    <>
+      <button>
+        <a href="/">홈으로.</a>
+      </button>
+
+      <div>
+        <h1 className="text-2xl">{file.name}</h1>
+        <div className="flex items-center justify-between">
           <PdfViewer url={`${file.url}`} />
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>현행</th>
+                <th>개정안</th>
+              </tr>
+            </thead>
+            <tbody>
+              {coupledData.map((data, index) => (
+                <tr key={index}>
+                  <td>{data[0]}</td>
+                  <td>{data[1]}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
-      ) : (
-        <h1>Loading...</h1>
-      )}
-    </div>
+      </div>
+    </>
   );
 };
 
