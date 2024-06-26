@@ -2,10 +2,10 @@ import { useState, ChangeEvent } from "react";
 import AWS from "aws-sdk";
 
 const useS3FileUpload = (
-  onUploadSuccess: (data: { Location: string; Key: string }) => void
+  onUploadSuccess: (data: AWS.S3.ManagedUpload.SendData) => void
 ) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [uploading, setUploading] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -18,6 +18,9 @@ const useS3FileUpload = (
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       const file = event.target.files[0];
+
+      if (!file) return;
+
       if (file.type !== "application/pdf") {
         setErrorMessage("Only PDF files are allowed.");
         setSelectedFile(null);
@@ -35,7 +38,7 @@ const useS3FileUpload = (
       return;
     }
 
-    setUploading(true);
+    setIsUploading(true);
 
     const params = {
       Bucket: process.env.REACT_APP_S3_BUCKET_NAME,
@@ -51,15 +54,17 @@ const useS3FileUpload = (
 
       setUploadSuccess(true);
     } catch (error) {
+      console.log("Error uploading to s3 :", error);
+
       setErrorMessage(`Error uploading file: ${(error as Error).message}`);
     } finally {
-      setUploading(false);
+      setIsUploading(false);
     }
   };
 
   return {
     selectedFile,
-    uploading,
+    isUploading,
     uploadSuccess,
     errorMessage,
     handleFileChange,
