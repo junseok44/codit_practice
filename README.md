@@ -1,6 +1,6 @@
 ## setup
 1. 레포지토리를 clone 받아주세요
-2. 메일로 보내드린 .env, mongo-keyfile을 루트 디렉토리에 복사해주세요.
+2. 메일로 보내드린 .env 파일을 루트 디렉토리에 복사해주세요.
 3. 루트 디렉토리에서 다음 명령을 실행해주세요. docker-compose up --build -d
 4. 루트 디렉토리에서 다음 명령을 실행해주세요.
 docker-compose exec mongo mongo -u admin -p qwer1234 --authenticationDatabase admin --eval 'rs.initiate({_id: "rs0", members: [{_id: 0,host:"mongo:27017"}]});'
