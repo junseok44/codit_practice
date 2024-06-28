@@ -4,9 +4,10 @@ version: "3.8"
 
 services:
   mongo:
-    image: mongo:4.4
+    build:
+      context: .
+      dockerfile: ./Dockerfile
     container_name: mongo
-    command: --replSet rs0 --keyFile /etc/secrets/mongo-keyfile
     ports:
       - "27017:27017"
     environment:
@@ -14,7 +15,6 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=qwer1234
     volumes:
       - ./server/src/config/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
-      - ./mongo-keyfile:/etc/secrets/mongo-keyfile:ro
   server:
     build:
       context: ./server
