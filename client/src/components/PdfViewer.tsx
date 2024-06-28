@@ -18,7 +18,7 @@ export default function PdfViewer({ url }) {
         }
 
         pdf.getPage(pageNum).then((page) => {
-          const viewport = page.getViewport({ scale: 1.3 });
+          const viewport = page.getViewport({ scale: 1 });
           const canvas = canvasRef.current;
 
           if (!canvas) {
@@ -81,8 +81,24 @@ export default function PdfViewer({ url }) {
   const prevPage = () => currentPage > 1 && setCurrentPage(currentPage - 1);
 
   return (
-    <>
-      <canvas ref={canvasRef}></canvas>
-    </>
+    <div className="w-1/2 h-full flex flex-col">
+      <div className="flex-grow flex items-center justify-center">
+        <canvas ref={canvasRef} className="max-h-full"></canvas>
+      </div>
+      <div className="mb-2 flex justify-center">
+        <button
+          onClick={prevPage}
+          className="mr-2 px-4 py-2 bg-blue-500 text-white rounded"
+        >
+          Previous
+        </button>
+        <button
+          onClick={nextPage}
+          className="px-4 py-2 bg-blue-500 text-white rounded"
+        >
+          Next
+        </button>
+      </div>
+    </div>
   );
 }

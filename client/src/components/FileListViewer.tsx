@@ -16,16 +16,18 @@ const FileList = () => {
     return <p>An error occurred.</p>;
   }
 
-  console.log(files);
-
   return (
     <>
-      <h1 className="text-2xl">Files</h1>
-      <ul>
+      <ul className="bg-white shadow-lg rounded-lg overflow-hidden">
         {files.map((file) => (
-          <a key={file.id} href={`/file/${file.id}`}>
-            <li>{file.name}</li>
-          </a>
+          <li key={file.id} className="border-b last:border-none">
+            <a
+              href={`/file/${file.id}`}
+              className="block px-4 py-2 hover:bg-gray-100 transition-colors duration-200"
+            >
+              {file.name}
+            </a>
+          </li>
         ))}
       </ul>
     </>

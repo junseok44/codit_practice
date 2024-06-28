@@ -16,22 +16,24 @@ const CoupledTable = ({ parsedData }: { parsedData: ResultTableData }) => {
   }
 
   return (
-    <table className="custom-table">
-      <thead>
-        <tr>
-          <th>현행</th>
-          <th>개정안</th>
-        </tr>
-      </thead>
-      <tbody>
-        {coupledData.map((data, index) => (
-          <tr key={index}>
-            <td>{data[0]}</td>
-            <td>{data[1]}</td>
+    <div className="w-1/2 h-full overflow-y-auto">
+      <table className="min-w-full table-auto border-collapse border border-gray-300">
+        <thead className="bg-gray-100">
+          <tr>
+            <th className="border border-gray-400 p-2 w-1/2">현행</th>
+            <th className="border border-gray-400 p-2 w-1/2">개정안</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {coupledData.map((data, index) => (
+            <tr key={index}>
+              <td className="border border-gray-400 p-2">{data[0]}</td>
+              <td className="border border-gray-400 p-2">{data[1]}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 };
 

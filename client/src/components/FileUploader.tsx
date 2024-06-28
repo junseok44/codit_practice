@@ -47,16 +47,32 @@ const FileUploader = () => {
   const totalUploadSuccess =
     !totalUploading && !totalUploadError && isFileUploadSuccess;
   return (
-    <div>
-      <input type="file" accept="application/pdf" onChange={handleFileChange} />
-      <button
-        onClick={handleS3Upload}
-        disabled={totalUploading || !selectedFile}
-      >
-        {totalUploading ? "Uploading..." : "Upload PDF"}
-      </button>
-      {totalUploadError && <p>An Error Occurred</p>}
-      {totalUploadSuccess && <p>File uploaded successfully!</p>}
+    <div className="p-4 bg-white shadow-lg rounded-lg">
+      <div className="mb-4">
+        <input
+          type="file"
+          accept="application/pdf"
+          onChange={handleFileChange}
+          className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+        />
+      </div>
+      <div className="mb-4">
+        <button
+          onClick={handleS3Upload}
+          disabled={totalUploading || !selectedFile}
+          className={`w-full py-2 px-4 rounded ${
+            totalUploading || !selectedFile
+              ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+              : "bg-blue-500 text-white hover:bg-blue-600"
+          } transition-colors duration-200`}
+        >
+          {totalUploading ? "Uploading..." : "Upload PDF"}
+        </button>
+      </div>
+      {totalUploadError && <p className="text-red-500">An Error Occurred</p>}
+      {totalUploadSuccess && (
+        <p className="text-green-500">File uploaded successfully!</p>
+      )}
     </div>
   );
 };
