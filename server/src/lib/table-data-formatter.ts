@@ -129,31 +129,37 @@ function formatter(data: LegislationData): ResultTableData {
         flag = true;
       }
 
-      if (flag) {
-        if (current) {
-          let parts = current
-            .split(customSplitRegex)
-            .filter((part) => part.trim());
+      if (!flag) continue;
 
-          if (currentParts.length > 0 && !customSplitRegex.test(parts[0])) {
-            currentParts[currentParts.length - 1] += " " + parts.shift();
-          }
-          currentParts = currentParts.concat(parts);
+      if (current) {
+        let parts = current
+          .split(customSplitRegex)
+          .filter((part) => part.trim());
+
+        // 만약 자른 부분 중에서 첫번째 부분이 문단의 시작 부분이 아니라 잘못 들어간 부분이라고 한다면
+        // 그 이전 문단의 마지막 부분에 붙여준다.
+        if (currentParts.length > 0 && !customSplitRegex.test(parts[0])) {
+          currentParts[currentParts.length - 1] += " " + parts.shift();
         }
-        if (proposed) {
-          let parts = proposed
-            .split(customSplitRegex)
-            .filter((part) => part.trim());
-          if (proposedParts.length > 0 && !customSplitRegex.test(parts[0])) {
-            proposedParts[proposedParts.length - 1] += " " + parts.shift();
-          }
-          proposedParts = proposedParts.concat(parts);
+        currentParts = currentParts.concat(parts);
+      }
+      if (proposed) {
+        let parts = proposed
+          .split(customSplitRegex)
+          .filter((part) => part.trim());
+
+        // 만약 자른 부분 중에서 첫번째 부분이 문단의 시작 부분이 아니라 잘못 들어간 부분이라고 한다면
+        // 그 이전 문단의 마지막 부분에 붙여준다.
+        if (proposedParts.length > 0 && !customSplitRegex.test(parts[0])) {
+          proposedParts[proposedParts.length - 1] += " " + parts.shift();
         }
+        proposedParts = proposedParts.concat(parts);
       }
     }
   }
 
   // 제__조가 나오는데, 거기에 번호가 없고, 그 다음에 번호가 나오는 경우,
+  // 그 번호는 제__조와 붙여준다.
   for (let i = 0; i < currentParts.length; i++) {
     if (
       currentParts[i].trim().match(/^제\d+조/) &&
@@ -166,6 +172,8 @@ function formatter(data: LegislationData): ResultTableData {
     }
   }
 
+  // 제__조가 나오는데, 거기에 번호가 없고, 그 다음에 번호가 나오는 경우,
+  // 그 번호는 제__조와 붙여준다.
   for (let i = 0; i < proposedParts.length; i++) {
     if (
       proposedParts[i].trim().match(/^제\d+조/) &&
@@ -181,4 +189,4 @@ function formatter(data: LegislationData): ResultTableData {
   return [currentParts, proposedParts];
 }
 
-console.log(formatter(example));
+// console.log(formatter(example));
