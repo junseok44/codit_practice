@@ -8,13 +8,14 @@ docker-compose exec mongo mongo -u admin -p qwer1234 --authenticationDatabase ad
 
 ## 설명
 
-클라이언트는 react, react-query, tailwind css, pdf를 주로 사용했고
-서버는 express,mongodb,prismaORM, pdfjs을 사용했습니다.
+클라이언트는 react, react-query, tailwind css, pdfJs를 사용했고
+서버는 express, mongodb, prismaORM, pdfjs, pdf-table-extractor를 사용했습니다.
 
 /127.0.0.1:3000 으로 접속하시면 
 / 에서 파일 업로드와 파일 목록을 조회할 수 있고
 파일 목록에서 특정 파일을 클릭하시면
 /file/[fileId] 에서 업로드한 파일을 확인하실 수 있습니다.
+
 
 
 ## 파싱작업
