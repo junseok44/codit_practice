@@ -793,23 +793,26 @@ pdf_table_extractor_run = async function (url) {
     const { default: fetch } = await import("node-fetch");
 
     const response = await fetch(url);
+
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
     const arrayBuffer = await response.arrayBuffer();
+
     const data = new Uint8Array(arrayBuffer);
 
-    const pdf = await PDFJS.getDocument(data).promise;
+    const pdfDocument = PDFJS.getDocument(data);
+
+    const pdf = await pdfDocument.promise;
+
     const result = await pdf_table_extractor(pdf);
+
     return result;
   } catch (e) {
     console.error(e);
     return null;
   }
-
-  // Will be using promises to load document, pages and misc data instead of
-  // callback.
 };
 
 if (typeof module !== "undefined") {

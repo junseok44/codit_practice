@@ -1,7 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
-import db, { connectToDatabase } from "./config/db";
-import { ResultTableData } from "./lib/table-data-formatter";
+import db from "./config/db";
+import { PdfParseResult } from "./@types/pdf-formatter";
 
 const app = express();
 const PORT = process.env.SERVER_PORT || 8000;
@@ -67,9 +67,9 @@ app.post("/api/file", async (req, res) => {
   }
 
   try {
-    let parsedData: ResultTableData = [[], []];
-
-    const result = await require("./lib/custom-table-extractor.js")(url);
+    const result = (await require("./lib/pdf-table-extractor.js")(
+      url
+    )) as PdfParseResult | null;
 
     if (!result) {
       return res.status(400).send({
@@ -77,11 +77,11 @@ app.post("/api/file", async (req, res) => {
       });
     }
 
-    const { default: PdfTableFormatter } = await import(
+    const { default: tableDataFormatter } = await import(
       "./lib/table-data-formatter"
     );
 
-    parsedData = PdfTableFormatter(result);
+    let parsedData = tableDataFormatter(result);
 
     const data = await db.pdfDocument.create({
       data: {
